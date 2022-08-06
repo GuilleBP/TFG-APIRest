@@ -5,7 +5,7 @@ const neode = require("neode")
   });
 
 async function getAll() {
-  var json = {};
+  let json = {};
   await neode
     .all("Proyect")
     .then(async (proyect) => {
@@ -18,7 +18,7 @@ async function getAll() {
 }
 
 async function getByID(id) {
-  var json = {};
+  let json = {};
   await neode
     .find("Proyect", id)
     .then(async (proyect) => {
@@ -31,7 +31,7 @@ async function getByID(id) {
 }
 
 async function create(name) {
-  var success = false;
+  let success = false;
   await neode
     .create("Proyect", {
       name: name,
@@ -59,7 +59,7 @@ async function remove(data) {
 }
 
 async function update(id, data) {
-  var json = {};
+  let json = {};
   const date = Date.now();
   await (
     await (await neode.find("Proyect", id)).update(data)
