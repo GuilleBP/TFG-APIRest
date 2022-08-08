@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const generateAccessToken = require("./tokenController")
+const generateAccessToken = require("./tokenController");
 const neode = require("neode")
   .fromEnv()
   .with({
@@ -9,18 +9,12 @@ const neode = require("neode")
 const login = async (req, res = response) => {
   const { username, pass } = req.body;
   let user = false;
-  // Ideally search the user in a database and validate password, throw an error if not found.
-  await neode
-    .cypher("MATCH (p:User {username: $username}) RETURN p", {
-      username: username,
-    })
-    .then(async (res) => {
-      if(res.records.length !== 0)
-        user = true;
-    });
 
-  // const user = getUserFromDB({ email, password });
-
+  await neode.all("User", { username: username }).then(async (collection) => {
+    if (collection.length !== 0)
+      user = await bcrypt.compare(pass, collection.get(0).get("pass"));
+  });
+  
   if (user) {
     const token = generateAccessToken.generateAccessToken(user?.username);
     res.json({
@@ -28,8 +22,6 @@ const login = async (req, res = response) => {
     });
   } else res.sendStatus(401);
 };
-
-// const result = await bcrypt.compare('textoplano', 'hash guardado en la bd');
 
 const register = async (data) => {
   let value = false;

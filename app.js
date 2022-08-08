@@ -19,7 +19,7 @@ apiRest.use(function (req, res, next) {
     "Origin, X-Requested-With, Content-Type, Accept"
   );
   res.header("Access-Control-Allow-Methods","*")
-  res.header("Access-Control-Allow-Headers","Authorization")
+  res.header("Access-Control-Allow-Headers","*")
   next();
 });
 

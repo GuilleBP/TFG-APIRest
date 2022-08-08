@@ -3,7 +3,7 @@ let router = express.Router();
 let controller = require("../controllers/proyectController.js");
 let { validateToken } = require("../controllers/tokenController");
 
-// router.all("*", [validateToken]);
+router.all("*", [validateToken]);
 
 //GET ALL
 router.get("/proyect", async (req, res) => {
@@ -13,7 +13,6 @@ router.get("/proyect", async (req, res) => {
 
 //GET BY ID
 router.get("/proyectid", async (req, res) => {
-  //'e7a9d4a8-1df6-4f91-a679-750ab84d6aa3'
   let result = await controller.getByID("e7a9d4a8-1df6-4f91-a679-750ab84d6aa3");
   res.send(result);
 });
