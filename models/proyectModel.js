@@ -16,14 +16,4 @@ module.exports = {
         type: "localdatetime",
         default: () => new Date()
     },
-
-    // acts_in: {
-    //     type: "relationship",
-    //     target: "Movie",
-    //     relationship: "ACTS_IN",
-    //     direction: "out",
-    //     properties: {
-    //         name: "string"
-    //     }
-    // }
 };

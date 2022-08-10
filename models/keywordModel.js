@@ -16,14 +16,4 @@ module.exports = {
         type: "localdatetime",
         default: () => new Date()
     },
-
-    belongs_to: {
-        type: "relationship",
-        target: "Proyect",
-        relationship: "BELONGS_TO",
-        direction: "out",
-        // properties: {
-        //     name: "string"
-        // }
-    }
 };

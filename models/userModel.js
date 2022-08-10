@@ -30,14 +30,11 @@ module.exports = {
         type: "localdatetime",
         default: () => new Date()
     },
-
-    // belongs_to: {
-    //     type: "relationship",
-    //     target: "Proyect",
-    //     relationship: "BELONGS_TO",
-    //     direction: "out",
-    //     // properties: {
-    //     //     name: "string"
-    //     // }
-    // }
+    have: {
+        type: "relationship",
+        target: "Project",
+        relationship: "HAVE",
+        direction: "out",
+        eager: true
+    }
 };

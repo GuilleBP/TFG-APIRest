@@ -4,8 +4,19 @@ const neode = require("neode")
     Proyect: require("../models/proyectModel"),
   });
 
+const neodeUser = require("neode")
+  .fromEnv()
+  .with({
+    User: require("../models/userModel"),
+  });
+
 async function getAll() {
   let json = {};
+
+  await (
+    await neode.all("Proyect")
+  ).find;
+
   await neode
     .all("Proyect")
     .then(async (proyect) => {
@@ -30,19 +41,19 @@ async function getByID(id) {
   return json;
 }
 
-async function create(name) {
+async function create(name, username) {
   let success = false;
-  await neode
-    .create("Proyect", {
-      name: name,
-    })
-    .then((proyect) => {
-      success = true;
-    })
-    .catch((e) => {
-      succes = false;
-      // res.status(500).send(e.getMessage());
+  try {
+    Promise.all([
+      neode.create("Proyect", { name: name }),
+      neodeUser.first("User", { username: username }),
+    ]).then(([adam, joe]) => {
+      joe.relateTo(adam, "have").then((res) => {
+      });
     });
+  } catch (error) {
+    console.log(error);
+  }
   return success;
 }
 

@@ -6,29 +6,33 @@ let { validateToken } = require("../controllers/tokenController");
 router.all("*", [validateToken]);
 
 //GET ALL
-router.get("/proyect", async (req, res) => {
-  let result = await controller.getAll();
+router.get("/proyect/:user", async (req, res) => {
+  let result = await controller.getAll(req.params.user);
   res.send(result);
 });
 
 //GET BY ID
-router.get("/proyectid", async (req, res) => {
-  let result = await controller.getByID("e7a9d4a8-1df6-4f91-a679-750ab84d6aa3");
+router.get("/proyectid/:id", async (req, res) => {
+  let result = await controller.getByID(req.params.id);
   res.send(result);
 });
 
 //CREATE
-router.post("/createproyect", async (req, res) => {
-  let result = await controller.create(req.body["data"]);
-  res.send(result);
+router.post("/createproyect/:user", async (req, res) => {
+  try {
+    let result = await controller.create(req.body["data"], req.params.user);
+    res.send(result);
+  } catch (error) {
+    res.sendStatus(500).send("Fallo al crear el proyecto");
+  }
 });
 
 //DELETE
 router.delete("/deleteproyect/:id", async (req, res) => {
-    const result = await controller.remove(
-      req.params.id.toString().replaceAll('"', "")
-    );
-    res.send('ok')
+  const result = await controller.remove(
+    req.params.id.toString().replaceAll('"', "")
+  );
+  res.send("ok");
 });
 
 //UPDATE
