@@ -2,28 +2,18 @@ const neode = require("neode")
   .fromEnv()
   .with({
     Proyect: require("../models/proyectModel"),
-  });
-
-const neodeUser = require("neode")
-  .fromEnv()
-  .with({
     User: require("../models/userModel"),
   });
 
-async function getAll() {
+async function getAll(username) {
   let json = {};
-
-  await (
-    await neode.all("Proyect")
-  ).find;
-
   await neode
-    .all("Proyect")
-    .then(async (proyect) => {
-      json = await proyect.toJson();
-    })
-    .catch((e) => {
-      // res.status(500).send(e.getMessage());
+    .cypher(
+      `match (u:User)-[:HAVE]->(p:Proyect) where u.username = $username return p`,
+      { username: username }
+    )
+    .then(async (proyects) => {
+      json = await neode.hydrate(proyects, 'p').toJson()
     });
   return json;
 }
@@ -46,10 +36,9 @@ async function create(name, username) {
   try {
     Promise.all([
       neode.create("Proyect", { name: name }),
-      neodeUser.first("User", { username: username }),
+      neode.first("User", { username: username }),
     ]).then(([adam, joe]) => {
-      joe.relateTo(adam, "have").then((res) => {
-      });
+      joe.relateTo(adam, "have").then((res) => {});
     });
   } catch (error) {
     console.log(error);

@@ -3,6 +3,7 @@ const generateAccessToken = require("./tokenController");
 const neode = require("neode")
   .fromEnv()
   .with({
+    Proyect: require("../models/proyectModel"),
     User: require("../models/userModel"),
   });
 
@@ -11,10 +12,11 @@ const login = async (req, res = response) => {
   let user = false;
 
   await neode.all("User", { username: username }).then(async (collection) => {
-    if (collection.length !== 0)
+    if (collection.length !== 0) {
       user = await bcrypt.compare(pass, collection.get(0).get("pass"));
+    }
   });
-  
+
   if (user) {
     const token = generateAccessToken.generateAccessToken(user?.username);
     res.json({

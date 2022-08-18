@@ -7,6 +7,7 @@ router.all("*", [validateToken]);
 
 //GET ALL
 router.get("/proyect/:user", async (req, res) => {
+  console.log('qwe');
   let result = await controller.getAll(req.params.user);
   res.send(result);
 });
