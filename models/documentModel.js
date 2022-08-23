@@ -4,7 +4,7 @@ module.exports = {
         type: 'uuid',
         required: true,
     },
-    "name":{
+    "text":{
         type: "string",
         required: true,
     },
@@ -16,10 +16,10 @@ module.exports = {
         type: "localdatetime",
         default: () => new Date()
     },
-    contain: {
+    got: {
         type: "relationship",
-        target: "Document",
-        relationship: "CONTAIN",
+        target: "Keyword",
+        relationship: "GOT",
         direction: "out",
         eager: true
     }

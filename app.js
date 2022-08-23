@@ -5,6 +5,7 @@ const {
 } = require("./controllers/tokenController.js");
 let proyect = require("./routers/proyectRouter.js");
 let user = require("./routers/userRouter.js");
+let keyword = require("./routers/keywordRouter.js");
 let bodyParser = require("body-parser");
 require("dotenv").config();
 const apiRest = express();
@@ -25,6 +26,7 @@ apiRest.use(function (req, res, next) {
 
 apiRest.use("/proyect", proyect);
 apiRest.use("/user", user);
+apiRest.use("/keyword", keyword);
 
 apiRest.get("/", (req, res) => {
   res.send("API for TFG");

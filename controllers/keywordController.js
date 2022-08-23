@@ -1,21 +1,24 @@
 const neode = require("neode")
   .fromEnv()
   .with({
+    Proyect: require("../models/proyectModel"),
     Keyword: require("../models/keywordModel"),
+    Document: require("../models/documentModel"),
   });
 
-async function getAll() {
+async function getAll(id) {
   let json = {};
   await neode
-    .all("Keyword")
+    .cypher(
+      `match (p:Proyect)-[:CONTAIN]->(d:Document)-[:GOT]->(k:Keyword) where p.id = $id return k`,
+      { id: id }
+    )
     .then(async (Keyword) => {
-      json = await Keyword.toJson();
-    })
-    .catch((e) => {
-      // res.status(500).send(e.getMessage());
+      json = await neode.hydrate(Keyword, 'k').toJson()
     });
   return json;
 }
+
 
 async function getByID(id) {
   let json = {};
@@ -30,27 +33,33 @@ async function getByID(id) {
   return json;
 }
 
-async function create(name) {
-  let success = false;
-  await neode
-    .create("Keyword", {
-      name: name,
-    })
-    .then((Keyword) => {
-      success = true;
-    })
-    .catch((e) => {
-      succes = false;
-      // res.status(500).send(e.getMessage());
+async function create(data) {
+  try {
+    Promise.all([
+      neode.first("Proyect", { id: data["proyectId"] }),
+      neode.create("Document", { text: data["text"] }),
+    ]).then(async ([proyect, document]) => {
+      await proyect.relateTo(document, "contain").then((res) => {});
+      for (var json in data["keyword"]) {
+        Promise.all([
+          neode.first("Document", { id: document.get('id') }),
+          neode.create("Keyword", { word: data['keyword'][json] }),
+        ]).then(async ([document, keyword]) => {
+          await document.relateTo(keyword, "got").then((res) => {});
+        });
+      }
     });
-  return success;
+  } catch (error) {
+    console.log(error);
+  }
+  return false;
 }
 
 async function remove(data) {
   neode
     .find("Keyword", data)
     .then((Keyword) => {
-        Keyword.delete();
+      Keyword.delete();
     })
     .catch((error) => {
       console.log(error);

@@ -2,14 +2,19 @@ let express = require("express");
 let router = express.Router();
 let controller = require("../controllers/proyectController.js");
 let { validateToken } = require("../controllers/tokenController");
+let levenshtein = require('damerau-levenshtein')
 
 router.all("*", [validateToken]);
 
 //GET ALL
 router.get("/proyect/:user", async (req, res) => {
-  console.log('qwe');
   let result = await controller.getAll(req.params.user);
   res.send(result);
+});
+
+router.get("/damerou", async (req, res) => {
+  const lev = levenshtein('neuronal network', 'artificial intelligence');
+  res.send(lev);
 });
 
 //GET BY ID
